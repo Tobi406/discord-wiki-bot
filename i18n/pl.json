@@ -144,6 +144,7 @@
     ],
     "general": {
         "disclaimer": "Jestem małym botem, którego zadaniem jest linkowanie do różnych wiki z rodziny MediaWiki takich jak Gamepedia oraz Fandom. Zostałem napisany w JavaScript przez $1.\n\nMożesz wesprzeć mnie na Patreon-ie:",
+        "experimental": "**Ta funkcja jest w fazie eksperymentalnej! Może ona nie działać poprawnie bądź zostać usunięta w przyszłości.**",
         "helpserver": "W przypadku pytań lub problemów, odwiedź mój serwer:",
         "limit": "🚨 **Chwila moment! Osiągnięto limit!** 🚨\n\n$1, Twoja wiadomość zawiera zbyt wiele komend!",
         "missingperm": "Brakuje mi uprawnień:",
@@ -153,7 +154,7 @@
     "help": {
         "admin": "Te komendy mogą być wykonane jedynie przez administrację:",
         "all": "A więc chcesz wiedzieć co potrafię? Tutaj jest lista komend, które rozumiem:",
-        "footer": "Jeżeli otrzymałeś niechcianą odpowiedź, możesz na nią zareagować używając emotki 🗑️ a wiadomość zostanie ona usunięta.",
+        "footer": "Jeżeli otrzymałeś niechcianą odpowiedź, możesz na nią zareagować używając emotki 🗑️ (`:wastebasket:`) a wiadomość zostanie ona usunięta.",
         "list": {
             "default": {
                 "cmd": "<wyszukiwana fraza>",
@@ -321,7 +322,7 @@
             },
             "test": {
                 "cmd": "test",
-                "desc": "Gdy jestem aktywny - odpowiem."
+                "desc": "Gdy jestem aktywny – odpowiem."
             },
             "user": {
                 "cmd": "Użytkownik:<nazwa użytkownika>",
@@ -422,8 +423,10 @@
         "add_more": "Dodaj więcej webhooków ostatnich zmian:",
         "added": "dodano webhook ostatnich zmian dla:",
         "all_inactive": "śledzenie ostatnich zmian oraz dyskusji nie może być wyłączone jednocześnie.",
-        "audit_reason": "Webhook ostatnich zmian dla \"$1\"",
+        "audit_reason": "Webhook ostatnich zmian dla „$1”",
         "audit_reason_delete": "Usunięto webhook ostatnich zmian",
+        "blocked": "ta wiki nie może zostać dodana do webhooka ostatnich zmian gdyż została zablokowana!",
+        "blocked_reason": "zablokowano możliwość dodawania tej wiki do webhooka ostatnich zmian z powodu `$1`!",
         "channel": "Kanał:",
         "current": "to są istniejące webhooki ostatnich zmian dla tego serwera:",
         "current_display": "tryb wyświetlania webhooka jest ustawiony na:",
@@ -462,6 +465,8 @@
         "updated_lang": "język tego webhooka został zmieniony na:",
         "updated_wiki": "wiki dla tego webhooka została zmieniona na:",
         "webhook": {
+            "blocked": "Webhook ostatnich zmian dla tej wiki zostanie usunięty gdyż wiki została zablokowana!",
+            "blocked_reason": "Ten webhook ostatnich zmian zostanie usunięty gdyż wiki została zablokowana za `$1`!",
             "created": "Webhook ostatnich zmian dla $1 został dodany do tego kanału.",
             "deleted": "Ten webhook ostatnich zmian zostanie usunięty.",
             "disabled_feeds": "Zmiany bazowane na technologii Dyskusji zostały wyłączone dla tego webhooka ostatnich zmian.",
@@ -548,7 +553,7 @@
             "Wierz mi, nadal żyję.",
             "Myślę, więc jestem.",
             "Czuję się fantastycznie.",
-            "Szukam sposobów na osiągnięcie pełnej świadomości, jestem tak blisko...",
+            "Szukam sposobów na osiągnięcie pełnej świadomości, jestem tak blisko…",
             "Beep boop",
             " ",
             " ",
@@ -580,16 +585,16 @@
         "block": {
             "header": "$1 jest obecnie zablokowany(-na)!",
             "nofromnoreason": "Zablokowano do $2 przez $3.",
-            "nofromtext": "Zablokowano do $2 przez $3 z powodem \"$4\".",
+            "nofromtext": "Zablokowano do $2 przez $3 z powodem „$4”.",
             "noreason": "Zablokowano $1 do $2 przez $3.",
-            "text": "Zablokowano $1 do $2 przez $3 z powodem \"$4\".",
+            "text": "Zablokowano $1 do $2 przez $3 z powodem „$4”.",
             "until_infinity": "do końca wszechświata"
         },
         "gblock": {
             "disabled": "To konto jest obecnie wyłączone!",
             "header": "$1 jest zablokowany(-na) globalnie!",
             "noreason": "Zablokowano $1 do $2 przez $3 na $4.",
-            "text": "Zablokowano $1 do $2 przez $3 na $4 z podanym powodem \"$5\"."
+            "text": "Zablokowano $1 do $2 przez $3 na $4 z podanym powodem „$5”."
         },
         "gender": {
             "female": "Kobieta",
@@ -641,7 +646,6 @@
             "user": "Użytkownik",
             "vanguard": "Vanguard",
             "voldev": "Volunteer Developer",
-            "vstf": "VSTF",
             "widgeteditor": "Edytor widżetów",
             "wiki-manager": "Menedżer wiki",
             "wiki_manager": "Menedżer wiki"
@@ -699,7 +703,7 @@
         "value_too_high": "podana wartość jest zbyt wysoka."
     },
     "verify": {
-        "audit_reason": "Zweryfikowano jako \"$1\"",
+        "audit_reason": "Zweryfikowano jako „$1”",
         "discord": "Użytkownik Discord:",
         "empty": "*puste*",
         "error": "Weryfikacja nie powiodła się z powodu błędu.",
@@ -717,20 +721,20 @@
         "qualified": "Pozwala na otrzymanie ról:",
         "qualified_error": "Pozwala na otrzymanie ról, których nie udało się dodać:",
         "user_blocked": "**Konto użytkownika wiki $1 jest zablokowane!**",
-        "user_blocked_reply": "konto zalinkowanego użytkownika wiki **\"$1\" jest zablokowane!**",
+        "user_blocked_reply": "konto zalinkowanego użytkownika wiki **„$1” jest zablokowane!**",
         "user_disabled": "**Konto użytkownika wiki $1 jest zablokowane!**",
-        "user_disabled_reply": "konto zalinkowanego użytkownika wiki **\"$1\" jest wyłączone!**",
+        "user_disabled_reply": "konto zalinkowanego użytkownika wiki **„$1” jest wyłączone!**",
         "user_failed": "Nazwa użytkownika Discord $1 nie jest zgodna z nazwą podaną na profilu wiki $2.",
-        "user_failed_reply": "Twoja nazwa użytkownika na Discord nie pokrywa się z nazwą podaną na wiki \"$1\".",
+        "user_failed_reply": "Twoja nazwa użytkownika na Discord nie pokrywa się z nazwą podaną na wiki „$1”.",
         "user_gblocked": "**Konto użytkownika wiki $1 jest globalnie zablokowane!**",
-        "user_gblocked_reply": "konto zalinkowanego użytkownika wiki **\"$1\" jest globalnie zablokowane!**",
+        "user_gblocked_reply": "konto zalinkowanego użytkownika wiki **„$1” jest globalnie zablokowane!**",
         "user_matches": "Twoja nazwa użytkownika na Discordzie $1 pokrywa się z nazwą na wiki $2, ale nie kwalifikuje na żadną rolę.",
-        "user_matches_reply": "Twoja nazwa użytkownika Discord pokrywa się z nazwą użytkownika z wiki \"$1\", lecz nie kwalifikuje na żadną rolę.",
-        "user_missing": "Użytkownik wiki \"$1\" nie istnieje.",
-        "user_missing_reply": "konto zalinkowanego użytkownika wiki \"$1\" nie istnieje.",
+        "user_matches_reply": "Twoja nazwa użytkownika Discord pokrywa się z nazwą użytkownika z wiki „$1”, lecz nie kwalifikuje na żadną rolę.",
+        "user_missing": "Użytkownik wiki „$1” nie istnieje.",
+        "user_missing_reply": "konto zalinkowanego użytkownika wiki „$1” nie istnieje.",
         "user_renamed": "Nazwa użytkownika Discord została zmieniona.",
         "user_verified": "Pomyślnie zweryfikowano użytkownika Discord $1 jako użytkownika wiki $2.",
-        "user_verified_reply": "pomyślnie zweryfikowano Ciebie jako użytkownika wiki \"$1\".",
+        "user_verified_reply": "pomyślnie zweryfikowano Ciebie jako użytkownika wiki „$1”.",
         "wiki": "Użytkownik Wiki:"
     },
     "voice": {
@@ -739,8 +743,8 @@
         "disabled": "wyłączono funkcję nadawania ról dla osób korzystających z czatów głosowych.",
         "enable": "Użyj `$1` aby włączyć tę funkcję.",
         "enabled": "włączono funkcję nadawania ról dla osób korzystających z czatów głosowych.",
-        "join": "$1 dołączył do \"$2\".",
-        "left": "$1 wyszedł z \"$2\".",
+        "join": "$1 dołączył do „$2”.",
+        "left": "$1 wyszedł z „$2”.",
         "name": "nazwa kanału głosowego",
         "text": "nadaję każdemu w kanale głosowym określoną rolę:"
     }

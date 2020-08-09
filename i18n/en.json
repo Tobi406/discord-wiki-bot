@@ -144,6 +144,7 @@
     ],
     "general": {
         "disclaimer": "I am a small bot with the purpose to easily link and search MediaWiki sites like Gamepedia and Fandom wikis. I show short descriptions and additional info about pages and am able to resolve redirects and follow interwiki links. $1 wrote me in JavaScript.\n\nYou can support me on Patreon:",
+        "experimental": "**This feature is experimental! It is not guaranteed to work correctly and may be removed in the future.**",
         "helpserver": "For questions and problems please visit my support server:",
         "limit": "🚨 **Stop, you hit a limit!** 🚨\n\n$1, your message contained too many commands!",
         "missingperm": "I'm missing some permissions for this command:",
@@ -153,7 +154,7 @@
     "help": {
         "admin": "These commands can only be performed by administrators:",
         "all": "So, you want to know what things I can do? Here is a list of all commands that I understand:",
-        "footer": "If you got an unwanted response, you can react with 🗑️ to my message and I will delete it.",
+        "footer": "If you got an unwanted response, you can react with 🗑️ (`:wastebasket:`) to my message and I will delete it.",
         "list": {
             "default": {
                 "cmd": "<search term>",
@@ -424,6 +425,8 @@
         "all_inactive": "you can't have wiki changes and feeds based changes disabled at the same time.",
         "audit_reason": "Recent changes webhook for \"$1\"",
         "audit_reason_delete": "Removed recent changes webhook",
+        "blocked": "this wiki has been blocked from being added as a recent changes webhook!",
+        "blocked_reason": "this wiki has been blocked from being added as a recent changes webhook for `$1`!",
         "channel": "Channel:",
         "current": "these are the current recent changes webhooks for this server:",
         "current_display": "the display mode for this webhook is:",
@@ -462,6 +465,8 @@
         "updated_lang": "the language for this webhook has been changed to:",
         "updated_wiki": "the wiki for this webhook has been changed to:",
         "webhook": {
+            "blocked": "This recent changes webhook will be deleted because the wiki has been blocked!",
+            "blocked_reason": "This recent changes webhook will be deleted because the wiki has been blocked for `$1`!",
             "created": "A recent changes webhook for $1 has been added to this channel.",
             "deleted": "This recent changes webhook will be deleted.",
             "disabled_feeds": "The feeds based changes, like discussions, message walls and article comments, have been disabled for this recent changes webhook.",
@@ -641,7 +646,6 @@
             "user": "User",
             "vanguard": "Vanguard",
             "voldev": "Volunteer Developer",
-            "vstf": "VSTF",
             "widgeteditor": "Widget editor",
             "wiki-manager": "Wiki manager",
             "wiki_manager": "Wiki manager"

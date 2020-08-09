@@ -144,6 +144,7 @@
     ],
     "general": {
         "disclaimer": "Ich bin ein kleiner Bot mit der Aufgabe einfach auf MediaWiki Websites, wie Gamepedia- und Fandom-Wikis, zu verlinken und diese zu durchsuchen. Ich zeige kurze Beschreibungen und zusätzliche Informationen zu Seiten und kann Weiterleitungen auflösen sowie Interwiki-Links folgen. Geschrieben wurde ich von $1 in JavaScript.\n\nDu kannst mich auf Patreon unterstützen:",
+        "experimental": "**Diese Funktion ist experimentell! Sie ist nicht garantiert richtig zu funktionieren und könnte in Zukunft eventuell entfernt werden.**",
         "helpserver": "Bei Fragen oder Problemen besuche bitte meinen Support-Server:",
         "limit": "🚨 **Stop, du hast ein Limit erreicht!** 🚨\n\n$1, deine Nachricht enthält zu viele Befehle!",
         "missingperm": "mir fehlen einige Berechtigungen für diesen Befehl:",
@@ -153,7 +154,7 @@
     "help": {
         "admin": "Diese Befehle können nur Administratoren ausführen:",
         "all": "Du willst also wissen, was ich so drauf habe? Hier ist eine Liste aller Befehle, die ich verstehe:",
-        "footer": "Falls du ein ungewolltes Ergebnis bekommen hast, kannst du mit 🗑️ auf meine Nachricht reagieren und ich werde sie löschen.",
+        "footer": "Falls du ein ungewolltes Ergebnis bekommen hast, kannst du mit 🗑️ (`:wastebasket:`) auf meine Nachricht reagieren und ich werde sie löschen.",
         "list": {
             "default": {
                 "cmd": "<Suchbegriff>",
@@ -424,6 +425,8 @@
         "all_inactive": "du kannst Wiki-Änderungen und Feeds-basierte Änderungen nicht gleichzeitig deaktiviert haben.",
         "audit_reason": "Letzte Änderungen-Webhook für \"$1\"",
         "audit_reason_delete": "Letzte Änderungen-Webhook entfernt",
+        "blocked": "diese Wiki wurde davon gesperrt als Letzte Änderungen-Webhook hinzugefügt zu werden!",
+        "blocked_reason": "diese Wiki wurde wegen `$1` davon gesperrt als Letzte Änderungen-Webhook hinzugefügt zu werden!",
         "channel": "Kanal:",
         "current": "dies sind die aktuellen Letzte Änderungen-Webhooks für diesen Server:",
         "current_display": "der Anzeigemodus für diesen Webhook ist:",
@@ -462,6 +465,8 @@
         "updated_lang": "die Sprache für diesen Webhook wurde geändert zu:",
         "updated_wiki": "das Wiki für diesen Webhook wurde geändert zu:",
         "webhook": {
+            "blocked": "Dieser Letzte Änderungen-Webhook wird gelöscht, da das Wiki gesperrt wurde!",
+            "blocked_reason": "Dieser Letzte Änderungen-Webhook wird gelöscht, da das Wiki wegen `$1` gesperrt wurde!",
             "created": "Ein Letzte Änderungen-Webhook für $1 wurde zu diesem Kanal hinzugefügt.",
             "deleted": "Dieser Letzte Änderungen-Webhook wird gelöscht.",
             "disabled_feeds": "Die Feeds-basierten Änderungen, wie Diskussionen, Nachrichtenseiten und Artikelkommentare, wurden für diesen Letzte Änderungen-Webhook deaktiviert.",
@@ -641,7 +646,6 @@
             "user": "Benutzer",
             "vanguard": "Portabilitäts-Pionier",
             "voldev": "Volunteer Developer",
-            "vstf": "VSTF",
             "widgeteditor": "Widget-Bearbeiter",
             "wiki-manager": "Wiki-Manager",
             "wiki_manager": "Wiki-Manager"
