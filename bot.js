@@ -434,3 +434,128 @@ async function graceful(signal) {
 
 process.once( 'SIGINT', graceful );
 process.once( 'SIGTERM', graceful );
+
+const express = require('express');
+const bodyParser = require('body-parser');
+const jwt = require('jsonwebtoken');
+const axios = require('axios');
+
+const app = express();
+const port = process.env.PORT | 3030;
+
+async function filter(arr, callback) {
+  const fail = Symbol()
+  return (await Promise.all(arr.map(async item => (await callback(item)) ? item : fail))).filter(i=>i!==fail)
+};
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+  extended: true,
+}));
+
+app.get('/login', async (req, res) => {
+  console.log(req.query.code);
+  const data = `client_id=${process.env.CLIENT_ID}&client_secret=${process.env.CLIENT_SECRET}&grant_type=authorization_code&code=${req.query.code}&scope=identify&redirect_uri=http://localhost:3030/login`;
+  axios.post("https://discord.com/api/oauth2/token", data, {
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+    },
+  })
+    .then(response => {
+      const token = jwt.sign({
+        token: response.data.access_token,
+      }, process.env.PRIVATE_KEY);
+      console.log(`Token: ${response.data.access_token}`);
+      res.redirect(`http://localhost:8080/dashboard?token=${token}`);
+    })
+    .catch(error => console.error(error));
+});
+
+app.get('/guilds', (req, res, next) => {
+  if (
+    !req.body.token
+  ) return res.json({error: 'No token provided'});
+  else next();
+}, async (req, res) => {
+  const decodedToken = jwt.verify(req.body.token, process.env.PRIVATE_KEY);
+  const rawData = await axios.get('https://discord.com/api/users/@me/guilds', {
+    headers: {
+      'Authorization': `Bearer ${decodedToken.token}`,
+      'Content-Type': 'application/json',
+    },
+  })
+    .then(response => {
+      return response.data;
+    })
+		.catch(error => console.error(error));
+	const modifiedData = rawData.filter(guild => {
+		return new Discord.Permissions(guild.permissions).has(['MANAGE_GUILD']);
+	});
+	function isInDb(guildId) {
+		return new Promise(function (resolve, reject) {
+			db.get( 'SELECT guild from `discord` WHERE guild = ?;', [guildId], function (dberror, row) {
+				if (dberror) reject(error);
+				resolve(row);
+			});
+		});
+	}
+	const modifiedData2 = await filter(modifiedData, async (value, index) => {
+		const result = await isInDb(value.id);
+		return result !== undefined;
+	});
+
+  res.json(modifiedData2);
+});
+
+app.get('/guilds/:id', (req, res) => {
+	db.get('SELECT * FROM `discord` WHERE guild = ?;', [req.params.id], function (dberror, row) {
+		if (dberror) console.error(dberror);
+		else res.json(row);
+	});
+});	
+
+app.post('/guilds/:id', (req, res, next) => {
+	if (!req.body.token) res.json({error: 'Missing token'});
+	else next();
+}, async (req, res) => {
+  const decodedToken = jwt.verify(req.body.token, process.env.PRIVATE_KEY);
+  const rawData = await axios.get('https://discord.com/api/users/@me/guilds', {
+    headers: {
+      'Authorization': `Bearer ${decodedToken.token}`,
+      'Content-Type': 'application/json',
+    },
+  })
+    .then(response => {
+      return response.data;
+    })
+		.catch(error => console.error(error));
+	rawData.filter(guild => guild.id === req.params.id).forEach(guild => {
+		const permissions = new Discord.Permissions(guild.permissions);
+		if (permissions.has(['MANAGE_GUILD'])) {
+			if (req.body.prefix) {
+				db.run( 'UPDATE `discord` SET prefix=? WHERE guild=?;', [req.body.prefix, req.params.id], function (dberror) {
+					if (dberror) console.error(dberror);
+				});
+			}
+			if (req.body.lang) {
+				db.run( 'UPDATE `discord` SET lang=? WHERE guild=?;', [req.body.lang, req.params.id], function (dberror) {
+					if (dberror) console.error(dberror);
+				});
+			}
+			if (req.body.wiki) {
+				db.run( 'UPDATE discord SET wiki=? WHERE guild=?;', [req.body.wiki, req.params.id], function (dberror) {
+					if (dberror) console.error(error);
+				});
+			}
+			res.status(200);
+		} else {
+			res.status(403);
+		}
+	});
+	// BUG: No status is returned currently
+	return res.status(200);
+});
+
+app.listen(port, () => {
+  console.log(`Running on port ${port}`);
+});
