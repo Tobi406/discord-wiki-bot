@@ -439,10 +439,12 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken');
 const axios = require('axios');
+const cors = require('cors');
 
 const app = express();
 const port = process.env.PORT | 3030;
 
+// This is a utility function, may be moved
 async function filter(arr, callback) {
   const fail = Symbol()
   return (await Promise.all(arr.map(async item => (await callback(item)) ? item : fail))).filter(i=>i!==fail)
@@ -452,6 +454,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: true,
 }));
+app.use(cors());
 
 app.get('/login', async (req, res) => {
   console.log(req.query.code);
@@ -471,7 +474,7 @@ app.get('/login', async (req, res) => {
     .catch(error => console.error(error));
 });
 
-app.get('/guilds', (req, res, next) => {
+app.post('/guilds', (req, res, next) => {
   if (
     !req.body.token
   ) return res.json({error: 'No token provided'});
@@ -493,8 +496,22 @@ app.get('/guilds', (req, res, next) => {
 	});
 	function isInDb(guildId) {
 		return new Promise(function (resolve, reject) {
-			db.get( 'SELECT guild from `discord` WHERE guild = ?;', [guildId], function (dberror, row) {
+			db.get( 'SELECT * FROM `discord` WHERE guild = ?;', [guildId], function (dberror, row) {
 				if (dberror) reject(error);
+				resolve(row);
+			});
+		});
+	}
+	async function asyncForEach(array, callback) {
+		for (let i = 0; i < array.length; i++) {
+			await callback(array[i], i, array);
+		}
+	}
+	async function getVerifications(guildId) {
+		return new Promise(function (resolve, reject) {
+			db.all('SELECT * FROM `verification` WHERE guild = ?;', [guildId], function (dberror, row) {
+				if (dberror) reject(dberror);
+				console.log(`Row: ${JSON.stringify(row, null, 2)}`);
 				resolve(row);
 			});
 		});
@@ -503,58 +520,75 @@ app.get('/guilds', (req, res, next) => {
 		const result = await isInDb(value.id);
 		return result !== undefined;
 	});
+	async function getModifiedData3(data) {
+		const toReturn = {};
+		await asyncForEach(data, async (server) => {
+			const serverData = {};
+			serverData.information = server;
+			serverData.data = await isInDb(server.id);
+			serverData.verifications = await getVerifications(server.id);
+			console.log(serverData.verifications);
+			const guild = client.guilds.cache.get(server.id);
+			serverData.roles = guild.roles.cache.array();
+			serverData.channels = guild.channels.cache.array();
+			toReturn[server.id] = serverData;
+		});
+		return toReturn;
+	}
+	const modifiedData3 = {};
+	modifiedData3.servers = await getModifiedData3(modifiedData2);
+	modifiedData3.langs = require('./util/i18n').allLangs();
 
-  res.json(modifiedData2);
+  res.json(modifiedData3);
 });
 
-app.get('/guilds/:id', (req, res) => {
-	db.get('SELECT * FROM `discord` WHERE guild = ?;', [req.params.id], function (dberror, row) {
-		if (dberror) console.error(dberror);
-		else res.json(row);
-	});
-});	
-
-app.post('/guilds/:id', (req, res, next) => {
-	if (!req.body.token) res.json({error: 'Missing token'});
-	else next();
-}, async (req, res) => {
-  const decodedToken = jwt.verify(req.body.token, process.env.PRIVATE_KEY);
-  const rawData = await axios.get('https://discord.com/api/users/@me/guilds', {
-    headers: {
-      'Authorization': `Bearer ${decodedToken.token}`,
-      'Content-Type': 'application/json',
-    },
-  })
-    .then(response => {
-      return response.data;
-    })
-		.catch(error => console.error(error));
-	rawData.filter(guild => guild.id === req.params.id).forEach(guild => {
-		const permissions = new Discord.Permissions(guild.permissions);
-		if (permissions.has(['MANAGE_GUILD'])) {
-			if (req.body.prefix) {
-				db.run( 'UPDATE `discord` SET prefix=? WHERE guild=?;', [req.body.prefix, req.params.id], function (dberror) {
-					if (dberror) console.error(dberror);
-				});
-			}
-			if (req.body.lang) {
-				db.run( 'UPDATE `discord` SET lang=? WHERE guild=?;', [req.body.lang, req.params.id], function (dberror) {
-					if (dberror) console.error(dberror);
-				});
-			}
-			if (req.body.wiki) {
-				db.run( 'UPDATE discord SET wiki=? WHERE guild=?;', [req.body.wiki, req.params.id], function (dberror) {
-					if (dberror) console.error(error);
-				});
-			}
-			res.status(200);
-		} else {
-			res.status(403);
-		}
-	});
-	// BUG: No status is returned currently
-	return res.status(200);
-});
+// This is not needed right now!
+//app.post('/guilds/:id', (req, res, next) => {
+//	if (!req.body.token) res.json({error: 'Missing token'});
+//	else next();
+//}, async (req, res) => {
+//  const decodedToken = jwt.verify(req.body.token, process.env.PRIVATE_KEY);
+//  const rawData = await axios.get('https://discord.com/api/users/@me/guilds', {
+//    headers: {
+//      'Authorization': `Bearer ${decodedToken.token}`,
+//      'Content-Type': 'application/json',
+//    },
+//  })
+//    .then(response => {
+//      return response.data;
+//    })
+//		.catch(error => console.error(error));
+//	console.log('At got rawData state');
+//	rawData.filter(guild => guild.id === req.params.id).forEach(guild => {
+//		const permissions = new Discord.Permissions(guild.permissions);
+//		console.log('At server state');
+//		if (permissions.has(['MANAGE_GUILD'])) {
+//			console.log('At permission state');
+//			if (req.body.prefix) {
+//				console.log('At prefix state');
+//				db.run( 'UPDATE `discord` SET prefix=? WHERE guild=?;', [req.body.prefix, req.params.id], function (dberror) {
+//					if (dberror) console.error(dberror);
+//				});
+//				client.shard.broadcastEval( `global.patreons['${req.params.id}'] = '${req.body.prefix}'` );
+//			}
+//			if (req.body.lang) {
+//				db.run( 'UPDATE `discord` SET lang=? WHERE guild=?;', [req.body.lang, req.params.id], function (dberror) {
+//					if (dberror) console.error(dberror);
+//				});
+//			}
+//			if (req.body.wiki) {
+//				db.run( 'UPDATE discord SET wiki=? WHERE guild=?;', [req.body.wiki, req.params.id], function (dberror) {
+//					if (dberror) console.error(error);
+//				});
+//			}
+//			res.status(200);
+//		} else {
+//			res.status(403);
+//		}
+//	});
+//	// BUG: No status is returned currently
+//	return res.status(200);
+//});
 
 app.listen(port, () => {
   console.log(`Running on port ${port}`);
